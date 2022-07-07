@@ -15,6 +15,7 @@ Box::~Box()
 }
 void Box::Update()
 {
+	isCollide = false;
 	Vector3 moveVelocity = velocity * speed;
 	position = position + moveVelocity;
 
