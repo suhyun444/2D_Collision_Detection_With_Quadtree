@@ -7,15 +7,13 @@ void display() {
 	glLoadIdentity();
 	glScaled(0.01f, 0.01f, 1.0f);
 	glColor3f(0.0f, 0.0f, 1.0f);
-	glBegin(GL_LINE_LOOP);
 	for (int i = 0; i < 4; i++)
 	{
-		glVertex2f(box[i].position.x - box[i].scale.x, box[i].position.y - box[i].scale.y);
-		glVertex2f(box[i].position.x - box[i].scale.x, box[i].position.y + box[i].scale.y);
-		glVertex2f(box[i].position.x + box[i].scale.x, box[i].position.y + box[i].scale.y);
-		glVertex2f(box[i].position.x + box[i].scale.x, box[i].position.y - box[i].scale.y);
+		box[i].Update();
+		glBegin(GL_LINE_LOOP);
+		box[i].Display();
+		glEnd();
 	}
-	glEnd();
 	glFinish();
 }
 

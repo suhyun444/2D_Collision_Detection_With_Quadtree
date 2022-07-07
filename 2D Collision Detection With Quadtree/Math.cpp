@@ -1,5 +1,11 @@
 #include "math.h"
 
+float MathUtil::PI = 3.141592f;
+float MathUtil::Abs(float n)
+{
+    if (n < 0)return -n;
+    return n;
+}
 Vector2::Vector2()
 {
     x = 0;
@@ -51,3 +57,8 @@ Vector3 Vector3::Cross(Vector3& v)
 {
     return Vector3(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);
 }
+Vector3 Vector3::operator*(float& o)
+{
+    return Vector3(x * o, y * o, z * o);
+}
+
