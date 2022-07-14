@@ -1,0 +1,31 @@
+#pragma once
+#include <vector>
+#include "Box.h";
+struct Rect {
+	float x, y, width, height;
+	Rect(float x, float y, float width, float height)
+		: x{ x }, y{ y }, width{ width }, height{ height }{};
+	Rect()
+		:x{ 0 }, y{ 0 }, width{ 0 }, height{ 0 }{};
+};
+class QuadTree
+{
+private:
+	const int MAX_OBJECTS = 10;
+	const int MAX_LEVELS = 5;
+	
+	int level;
+	std::vector<Box> objects;
+	Rect rect;
+	QuadTree* nodes[4];
+
+public:
+	QuadTree();
+	QuadTree(int level,Rect rect);
+	~QuadTree();
+	void Clear();
+	void Split();
+	int GetQuadrant(Box box);
+	void Insert(Box box);
+};
+

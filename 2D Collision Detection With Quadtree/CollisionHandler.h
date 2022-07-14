@@ -11,5 +11,6 @@ public:
 	~CollisionHandler();
 	void Add(Box* box);
 	void BoardPhase();
+	bool Collide(Box* a, Box* b);
 };
 

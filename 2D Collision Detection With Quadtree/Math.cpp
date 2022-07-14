@@ -61,4 +61,8 @@ Vector3 Vector3::operator*(float& o)
 {
     return Vector3(x * o, y * o, z * o);
 }
+Vector3 Vector3::operator/(float& o)
+{
+    return Vector3(x / o, y / o, z / o);
+}
 

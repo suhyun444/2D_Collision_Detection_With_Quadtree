@@ -18,10 +18,16 @@ void CollisionHandler::BoardPhase()
 	{
 		for (int j = i + 1; j < boxes.size(); j++)
 		{
-			if (boxes[i]->position.x + boxes[i]->scale.x < boxes[j]->position.x - boxes[j]->scale.x || boxes[i]->position.x - boxes[i]->scale.x> boxes[j]->position.x + boxes[j]->scale.x) continue;
-			if (boxes[i]->position.y + boxes[i]->scale.y < boxes[j]->position.y - boxes[j]->scale.y || boxes[i]->position.y - boxes[i]->scale.y> boxes[j]->position.y + boxes[j]->scale.y) continue;
-			boxes[i]->isCollide = true;
-			boxes[j]->isCollide = true;
 		}
 	}
+}
+bool CollisionHandler::Collide(Box* a, Box* b)
+{
+	if (a->position.x + a->scale.x < b->position.x - b->scale.x 
+		|| a->position.x - a->scale.x> b->position.x + b->scale.x) return false;
+	if (a->position.y + a->scale.y < b->position.y - b->scale.y 
+		|| a->position.y - a->scale.y> b->position.y + b->scale.y) return false;
+	a->isCollide = true;
+	b->isCollide = true;
+	return true;
 }
