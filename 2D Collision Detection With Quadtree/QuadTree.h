@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Box.h";
+#include "CollisionHandler.h"
 struct Rect {
 	float x, y, width, height;
 	Rect(float x, float y, float width, float height)
@@ -30,5 +31,6 @@ public:
 	std::pair<Box*, std::vector<int>> GetOverLapQuadrant(Box* box);
 	void Insert(Box* box);
 	void Display();
+	void BoardPhase();
 };
 

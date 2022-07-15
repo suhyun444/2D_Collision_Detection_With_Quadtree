@@ -18,13 +18,14 @@ QuadTree::~QuadTree()
 void QuadTree::Clear()
 {
 	objects.clear();
-	for (int i = 0; i < 4; i++)
+	overLapBox.clear();
+	if (nodes[0] != NULL)
 	{
-		if (nodes[i] != NULL)
+		for (int i = 0; i < 4; i++)
 		{
 			nodes[i]->Clear();
+			delete(nodes[i]);
 			nodes[i] = NULL;
-			//delete(nodes[i]);
 		}
 	}
 
@@ -41,10 +42,10 @@ void QuadTree::Split()
 	float halfWidth = rect.width / 2;
 	float halfHeight = rect.height / 2;
 
-	nodes[0] = new QuadTree(level + 1,Rect(rect.x,			   rect.y + halfHeight,	halfWidth,halfHeight));
-	nodes[1] = new QuadTree(level + 1,Rect(rect.x + halfWidth, rect.y + halfHeight,	halfWidth,halfHeight));
-	nodes[2] = new QuadTree(level + 1,Rect(rect.x,			   rect.y   		  , halfWidth,   halfHeight));
-	nodes[3] = new QuadTree(level + 1,Rect(rect.x + halfWidth, rect.y     		  , halfWidth,   halfHeight));
+	nodes[0] = new QuadTree{ level + 1, Rect(rect.x				, rect.y + halfHeight, halfWidth, halfHeight) };
+	nodes[1] = new QuadTree{ level + 1, Rect(rect.x + halfWidth	, rect.y + halfHeight, halfWidth, halfHeight) };
+	nodes[2] = new QuadTree{ level + 1, Rect(rect.x				, rect.y			 , halfWidth, halfHeight) };
+	nodes[3] = new QuadTree{ level + 1, Rect(rect.x + halfWidth , rect.y			 , halfWidth, halfHeight) };
 }
 //두가지 사분면에 걸쳐있는 사각형은 따로 처리
 //리프 노드에 넣지않고 바로 충돌처리를 해준다
@@ -72,11 +73,13 @@ void QuadTree::Insert(Box* box)
 		int index = GetQuadrant(box);
 		if (index != -1)
 			nodes[index]->Insert(box);
-	
+		else
+			overLapBox.push_back(GetOverLapQuadrant(box));
+
 		return;
 	}
 	objects.push_back(box);
-	
+
 	if (objects.size() > MAX_OBJECTS && level < MAX_LEVELS)
 	{
 		if (nodes[0] == NULL)
@@ -91,11 +94,67 @@ void QuadTree::Insert(Box* box)
 			if (index != -1)
 				nodes[index]->Insert(cur);
 			else
-				overLapBox.push_back(GetOverLapQuadrant(box));
+				overLapBox.push_back(GetOverLapQuadrant(cur));
 		}
 	}
 }
-std::pair<Box*,std::vector<int>> QuadTree::GetOverLapQuadrant(Box* box)
+
+/*
+* 문제 발생
+* 루트 노드에서 오버랩박스가 생긴다
+* 그 후 자식노드에서도 오버랩 노드가생긴다
+* 이 두 노드는 충돌 판정을 거치지만
+* 그 자식노드의 자식노드와 루트노드의 오버랩 박스는 충돌 판정을 거치지 않는다
+* 이를 해결하기위해 오버랩박스도 리프노드까지 넘겨 준 후
+* 리프노드에서 모든 충돌 판정을 진행해야 할 것 같다
+*/
+void QuadTree::BoardPhase()
+{
+	if (nodes[0] == NULL)
+	{
+		int size = objects.size() - 1;
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = i + 1; j < objects.size(); j++)
+			{
+				CollisionHandler::Collide(objects[i], objects[j]);
+			}
+		}
+
+		return;
+	}
+	else
+	{
+		int size = overLapBox.size() - 1;
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = i + 1; j < overLapBox.size(); j++)
+			{
+				CollisionHandler::Collide(overLapBox[i].first, overLapBox[j].first);
+			}
+		}
+		for (int i = 0; i < overLapBox.size(); i++)
+		{
+			for (int j = 0; j < overLapBox[i].second.size(); j++)
+			{
+				for (int k = 0; k < nodes[overLapBox[i].second[j]]->objects.size(); k++)
+				{
+					CollisionHandler::Collide(overLapBox[i].first, nodes[overLapBox[i].second[j]]->objects[k]);
+				}
+			}
+			for (int j = 0; j < 4; j++)
+			{
+				for (int k = 0; k < nodes[j]->overLapBox.size(); k++)
+				{
+					CollisionHandler::Collide(overLapBox[i].first, nodes[j]->overLapBox[k].first);
+				}
+			}
+		}
+		for (int i = 0; i < 4; i++)nodes[i]->BoardPhase();
+	}
+
+}
+std::pair<Box*, std::vector<int>> QuadTree::GetOverLapQuadrant(Box* box)
 {
 	std::pair<Box*, std::vector<int>> ret;
 	ret.first = box;
@@ -119,7 +178,7 @@ std::pair<Box*,std::vector<int>> QuadTree::GetOverLapQuadrant(Box* box)
 	return ret;
 }
 void QuadTree::Display()
-{	
+{
 	if (nodes[0] == NULL)
 	{
 		glBegin(GL_LINE_LOOP);
