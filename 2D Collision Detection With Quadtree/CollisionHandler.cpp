@@ -18,6 +18,7 @@ void CollisionHandler::BoardPhase()
 	{
 		for (int j = i + 1; j < boxes.size(); j++)
 		{
+			Collide(boxes[i], boxes[j]);
 		}
 	}
 }

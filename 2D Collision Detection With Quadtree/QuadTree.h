@@ -11,11 +11,12 @@ struct Rect {
 class QuadTree
 {
 private:
-	const int MAX_OBJECTS = 10;
+	const int MAX_OBJECTS = 5;
 	const int MAX_LEVELS = 5;
 	
 	int level;
-	std::vector<Box> objects;
+	std::vector<Box*> objects;
+	std::vector<std::pair<Box*,std::vector<int>>> overLapBox;
 	Rect rect;
 	QuadTree* nodes[4];
 
@@ -25,7 +26,9 @@ public:
 	~QuadTree();
 	void Clear();
 	void Split();
-	int GetQuadrant(Box box);
-	void Insert(Box box);
+	int GetQuadrant(Box* box);
+	std::pair<Box*, std::vector<int>> GetOverLapQuadrant(Box* box);
+	void Insert(Box* box);
+	void Display();
 };
 

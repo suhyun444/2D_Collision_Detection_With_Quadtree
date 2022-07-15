@@ -2,7 +2,7 @@
 #define PI 3.141592
 Box::Box()
 {
-	speed = 0.01f;
+	speed = 0.001f;
 	scale = Vector3(4, 4, 1);
 	float angle = rand() % 360;
 	float radian = angle * PI / 180;
@@ -26,8 +26,10 @@ void Box::Update()
 }
 void Box::Display()
 {
+	glBegin(GL_LINE_LOOP);
 	glVertex2f(position.x - scale.x, position.y - scale.y);
 	glVertex2f(position.x - scale.x, position.y + scale.y);
 	glVertex2f(position.x + scale.x, position.y + scale.y);
 	glVertex2f(position.x + scale.x, position.y - scale.y);
+	glEnd();
 }
