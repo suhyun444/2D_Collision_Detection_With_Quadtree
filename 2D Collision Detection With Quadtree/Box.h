@@ -1,5 +1,5 @@
 #pragma once
-#include "GL/freeglut.h"
+#include "include/GL/freeglut.h"
 #include "Math.h"
 
 class Box
@@ -12,7 +12,7 @@ public:
 	Vector3 velocity;
 	Box();
 	~Box();
-	void Update();
+	void Update(float deltaTime);
 	void Display();
 };
 

@@ -17,7 +17,7 @@ private:
 	
 	int level;
 	std::vector<Box*> objects;
-	std::vector<std::pair<Box*,std::vector<int>>> overLapBox;
+	std::vector<Box*> overLapBox;
 	Rect rect;
 	QuadTree* nodes[4];
 
@@ -28,7 +28,7 @@ public:
 	void Clear();
 	void Split();
 	int GetQuadrant(Box* box);
-	std::pair<Box*, std::vector<int>> GetOverLapQuadrant(Box* box);
+	std::vector<int> GetOverLapQuadrant(Box* box);
 	void Insert(Box* box);
 	void Display();
 	void BoardPhase();
