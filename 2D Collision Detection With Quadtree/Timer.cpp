@@ -22,6 +22,7 @@ bool Timer::Initialize()
 	frameCount = 0;
 	frame = 0;
 	timeElapsed = 0;
+	elapsedMS = 0;
 	return true;
 }
 
@@ -35,6 +36,7 @@ void Timer::Frame()
 	{
 		timeElapsed -= 1.0f;
 		frame = frameCount;
+		std::cout << elapsedMS / frameCount;
 		frameCount = 0;
 	}
 	QueryPerformanceCounter((LARGE_INTEGER*)&currentTime);
@@ -46,7 +48,16 @@ void Timer::Frame()
 
 	return;
 }
+void Timer::UpdateTime()
+{
+	INT64 currentTime;
+	float timeDifference;
+	QueryPerformanceCounter((LARGE_INTEGER*)&currentTime);
+	timeDifference = (float)(currentTime - startTime);
+	frameTime = timeDifference / ticksPerMs;
 
+	startTime = currentTime;
+}
 float Timer::GetTime()
 {
 	return frameTime;

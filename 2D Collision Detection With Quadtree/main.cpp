@@ -1,9 +1,15 @@
-﻿#include "GL/glut.h"
+﻿#include "include/GL/glut.h"
 #include <iostream>
 #include <string>
 #include "Box.h"
 #include "CollisionHandler.h"
 #include "QuadTree.h"
+#include "Timer.h"
+#include "include/GL/freeglut_ext.h"
+#pragma comment(lib, "freeglut.lib")
+
+#define BOXCOUNT 5000
+
 #include "Timer.h"
 
 #define BOXCOUNT 2500
@@ -12,6 +18,10 @@ Box box[BOXCOUNT];
 CollisionHandler collisionHandler;
 QuadTree quadTree = QuadTree(0, Rect(-1000, -1000, 2000, 2000));
 Timer timer;
+Timer collisionCheckTimer;
+QuadTree quadTree = QuadTree(0, Rect(-1000, -1000, 2000, 2000));
+Timer timer;
+Timer collisionCheckTimer;
 
 void BruteForceCollisionHandlerInit()
 {
@@ -69,14 +79,14 @@ int main(int argc, char** argv)
 	glutCreateWindow("2D Collision Detection");
 	glutDisplayFunc(display);
 	glutIdleFunc(display);
-	
 	timer.Initialize();
+
 	for (int i = 0; i < BOXCOUNT; i++)
-	{
 		box[i].position = Vector3(((i / 50) *35) - 900, ((i % 50) * 35) - 900, 0);
-	}
+		box[i].position = Vector3(((i / 10) *10) - 50, ((i % 10) * 10) - 50, 0);
 	//BruteForceCollisionHandlerInit();
 
+	}
 	glutMainLoop();
 	return 0;
 }
