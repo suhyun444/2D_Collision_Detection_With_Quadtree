@@ -2,8 +2,8 @@
 #define PI 3.141592
 Box::Box()
 {
-	speed = 0.001f;
-	scale = Vector3(4, 4, 1);
+	speed = 10.0f;
+	scale = Vector3(rand() % 10 + 5, rand()% 10 + 5, 1);
 	float angle = rand() % 360;
 	float radian = angle * PI / 180;
 	velocity.x = cosf(radian);
@@ -13,16 +13,16 @@ Box::~Box()
 {
 
 }
-void Box::Update()
+void Box::Update(float deltaTime)
 {
 	isCollide = false;
-	Vector3 moveVelocity = velocity * speed;
+	Vector3 moveVelocity = velocity * speed * deltaTime;
 	position = position + moveVelocity;
 
-	if (position.x - scale.x < -100) velocity.x = MathUtil::Abs(velocity.x);
-	else if (position.x + scale.x > 100)velocity.x = -MathUtil::Abs(velocity.x);
-	if (position.y - scale.y < -100)velocity.y = MathUtil::Abs(velocity.y);
-	else if (position.y + scale.y > 100)velocity.y = -MathUtil::Abs(velocity.y);
+	if (position.x - scale.x < -1000) velocity.x = MathUtil::Abs(velocity.x);
+	else if (position.x + scale.x > 1000)velocity.x = -MathUtil::Abs(velocity.x);
+	if (position.y - scale.y < -1000)velocity.y = MathUtil::Abs(velocity.y);
+	else if (position.y + scale.y > 1000)velocity.y = -MathUtil::Abs(velocity.y);
 }
 void Box::Display()
 {

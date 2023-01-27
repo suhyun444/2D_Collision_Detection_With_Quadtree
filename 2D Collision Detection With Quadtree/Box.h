@@ -12,7 +12,7 @@ public:
 	Vector3 velocity;
 	Box();
 	~Box();
-	void Update();
+	void Update(float deltaTime);
 	void Display();
 };
 
